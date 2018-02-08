@@ -44,6 +44,7 @@ function processKeyStroke(ch, key) {
 
 function displayInitMessage() {
     console.log(gameMessages.welcome);
+    console.log(gameMessages.goal);
 }
 
 function displayLostMsg() {
@@ -89,9 +90,12 @@ function initiateMatrix(size) {
 }
 
 function displayGrid() {
-    console.log("\n\n");
+    // process.stdout.write("\u001B[2J\u001B[0;0f");
+    // console.clear();
+    console.log('\033c');
+    displayInitMessage();
     console.log(matrix.join("\n\n"));
-    console.log("\n\n");
+
 }
 
 function bootstrap() {
@@ -117,8 +121,6 @@ function bootstrap() {
     displayGrid();
     initiateIO();
 }
-
-bootstrap();
 
 function fillEmptySpace() {
     var emptySpacesFound = true;
@@ -427,3 +429,6 @@ function recordEmptySpaces() {
     }
     return emptySpaces;
 }
+
+
+bootstrap();

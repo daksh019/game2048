@@ -6,6 +6,7 @@
     },
     "gameMessages": {
         "welcome": "Welcome to 2048! Use up, down, right and left keys to move rows and columns of the grid",
+        "goal": "Your Goal is to add the numbers to reach 2048. If the grid fills first you try again!",
         "gameOver": "Game Over !",
         "won": "You Won! Continue to reach higher level"
     },
