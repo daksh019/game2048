@@ -151,6 +151,35 @@ function randomIntGenerator(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function isValueNonEmpty(val) {
+    return val !== undefined && val !== "" && val !== config.emptySymbol;
+}
+
+function mergeAndcheckForWinningScore(endpoint, toMergePos) {
+    var endpointVal = matrix[endpoint.l][endpoint.b];
+    var toMergeVal = matrix[toMergePos.l][toMergePos.b];
+    var score = endpointVal + toMergeVal;
+    matrix[endpoint.l][endpoint.b] = score;
+    if (score >= config.winningScore) {
+        console.log(gameMessages.won);
+    }
+    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
+}
+
+function shiftMergePosToEndpoint(endpoint, toMergePos) {
+    var endpointVal = matrix[endpoint.l][endpoint.b];
+    var toMergeVal = matrix[toMergePos.l][toMergePos.b];
+
+    var isEndPointEmpty = !isValueNonEmpty(endpointVal);
+    var isMergeValFull = isValueNonEmpty(toMergeVal);
+
+    if (isEndPointEmpty && isMergeValFull) {
+        matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
+        matrix[endpoint.l][endpoint.b] = toMergeVal;
+    }
+
+}
+
 
 function moveGridToLeft() {
 
@@ -174,16 +203,12 @@ function moveGridToLeft() {
             var endpointVal = matrix[endpoint.l][endpoint.b];
             var toMergeVal = matrix[toMergePos.l][toMergePos.b];
 
-            var isEndPointFull = endpointVal !== undefined && endpointVal !== "" && endpointVal !== config.emptySymbol;
-            var isMergeValFull = toMergeVal !== undefined && toMergeVal !== "" && toMergeVal !== config.emptySymbol;
+            var isEndPointFull = isValueNonEmpty(endpointVal);
+            var isMergeValFull = isValueNonEmpty(toMergeVal);
 
             if (isEndPointFull && isMergeValFull) {
                 if (endpointVal == toMergeVal) {
-                    matrix[endpoint.l][endpoint.b] = endpointVal + toMergeVal;
-                    if (endpointVal + toMergeVal == config.winningScore) {
-                        console.log(gameMessages.won);
-                    }
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
+                    mergeAndcheckForWinningScore(endpoint, toMergePos);
                 } else {
                     matrix[endpoint.l][endpoint.b + 1] = toMergeVal;
                     if (endpoint.b + 1 != toMergePos.b) {
@@ -195,14 +220,7 @@ function moveGridToLeft() {
                     b: endpoint.b + 1
                 };
             } else {
-                if (!isEndPointFull && !isMergeValFull) {
-                    // nothing is required here 
-                } else if (isEndPointFull) {
-                    // nothing is required here 
-                } else {
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
-                    matrix[endpoint.l][endpoint.b] = toMergeVal;
-                }
+                shiftMergePosToEndpoint(endpoint, toMergePos);
             }
 
             toMergePos = {
@@ -238,16 +256,12 @@ function moveGridToRight() {
             var endpointVal = matrix[endpoint.l][endpoint.b];
             var toMergeVal = matrix[toMergePos.l][toMergePos.b];
 
-            var isEndPointFull = endpointVal !== undefined && endpointVal !== "" && endpointVal !== config.emptySymbol;
-            var isMergeValFull = toMergeVal !== undefined && toMergeVal !== "" && toMergeVal !== config.emptySymbol;
+            var isEndPointFull = isValueNonEmpty(endpointVal);
+            var isMergeValFull = isValueNonEmpty(toMergeVal);
 
             if (isEndPointFull && isMergeValFull) {
                 if (endpointVal == toMergeVal) {
-                    matrix[endpoint.l][endpoint.b] = endpointVal + toMergeVal;
-                    if (endpointVal + toMergeVal == config.winningScore) {
-                        console.log(gameMessages.won);
-                    }
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
+                    mergeAndcheckForWinningScore(endpoint, toMergePos);
                     endpoint = {
                         l: length,
                         b: endpoint.b - 1
@@ -265,14 +279,7 @@ function moveGridToRight() {
                     };
                 }
             } else {
-                if (!isEndPointFull && !isMergeValFull) {
-                    // nothing is required here 
-                } else if (isEndPointFull) {
-                    // nothing is required here 
-                } else {
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
-                    matrix[endpoint.l][endpoint.b] = toMergeVal;
-                }
+                shiftMergePosToEndpoint(endpoint, toMergePos);
             }
 
             toMergePos = {
@@ -306,16 +313,12 @@ function moveGridUp() {
             var endpointVal = matrix[endpoint.l][endpoint.b];
             var toMergeVal = matrix[toMergePos.l][toMergePos.b];
 
-            var isEndPointFull = endpointVal !== undefined && endpointVal !== "" && endpointVal !== config.emptySymbol;
-            var isMergeValFull = toMergeVal !== undefined && toMergeVal !== "" && toMergeVal !== config.emptySymbol;
+            var isEndPointFull = isValueNonEmpty(endpointVal);
+            var isMergeValFull = isValueNonEmpty(toMergeVal);
 
             if (isEndPointFull && isMergeValFull) {
                 if (endpointVal == toMergeVal) {
-                    matrix[endpoint.l][endpoint.b] = endpointVal + toMergeVal;
-                    if (endpointVal + toMergeVal == config.winningScore) {
-                        console.log(gameMessages.won);
-                    }
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
+                    mergeAndcheckForWinningScore(endpoint, toMergePos);
                 } else {
                     matrix[endpoint.l + 1][endpoint.b] = toMergeVal;
                     if (endpoint.l + 1 != toMergePos.l) {
@@ -328,14 +331,7 @@ function moveGridUp() {
                     b: breadth
                 };
             } else {
-                if (!isEndPointFull && !isMergeValFull) {
-                    // nothing is required here 
-                } else if (isEndPointFull) {
-                    // nothing is required here 
-                } else {
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
-                    matrix[endpoint.l][endpoint.b] = toMergeVal;
-                }
+                shiftMergePosToEndpoint(endpoint, toMergePos);
             }
 
             if (length + 1 < gridSize) {
@@ -372,16 +368,12 @@ function moveGridDown() {
             var endpointVal = matrix[endpoint.l][endpoint.b];
             var toMergeVal = matrix[toMergePos.l][toMergePos.b];
 
-            var isEndPointFull = endpointVal !== undefined && endpointVal !== "" && endpointVal !== config.emptySymbol;
-            var isMergeValFull = toMergeVal !== undefined && toMergeVal !== "" && toMergeVal !== config.emptySymbol;
+            var isEndPointFull = isValueNonEmpty(endpointVal);
+            var isMergeValFull = isValueNonEmpty(toMergeVal);
 
             if (isEndPointFull && isMergeValFull) {
                 if (endpointVal == toMergeVal) {
-                    matrix[endpoint.l][endpoint.b] = endpointVal + toMergeVal;
-                    if (endpointVal + toMergeVal == config.winningScore) {
-                        console.log(gameMessages.won);
-                    }
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
+                    mergeAndcheckForWinningScore(endpoint, toMergePos);
                 } else {
                     matrix[endpoint.l - 1][endpoint.b] = toMergeVal;
                     if (endpoint.l - 1 != toMergePos.l) {
@@ -393,15 +385,7 @@ function moveGridDown() {
                     b: breadth
                 };
             } else {
-                if (!isEndPointFull && !isMergeValFull) {
-                    // nothing is required here 
-                } else if (isEndPointFull) {
-                    // nothing is required here 
-                } else {
-
-                    matrix[toMergePos.l][toMergePos.b] = config.emptySymbol;
-                    matrix[endpoint.l][endpoint.b] = toMergeVal;
-                }
+                shiftMergePosToEndpoint(endpoint, toMergePos);
             }
 
             toMergePos = {
